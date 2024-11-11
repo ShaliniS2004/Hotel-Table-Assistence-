@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Restaurant Login</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="login-page">
+    <div class="login-container">
+        <h1>Restaurant Login</h1>
+        <form id="loginForm">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required>
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required>
+            <button type="submit" id="loginButton">Login</button>
+            <button type="button" id="registerButton">Register</button> <!-- Register as a separate button -->
+        </form>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+        import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
+
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyDgHynVFiW6xNPwF6BqwoXvaMm0p3Vb9XY",
+            authDomain: "hotel0333.firebaseapp.com",
+            projectId: "hotel0333",
+            databaseURL: "https://hotel0333-default-rtdb.firebaseio.com",  // Make sure databaseURL is correctly specified
+            storageBucket: "hotel0333.appspot.com",
+            messagingSenderId: "314143602013",
+            appId: "1:314143602013:web:4748f971c2e923f766e4b4"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        // Register button functionality
+        document.getElementById("registerButton").addEventListener('click', function (e) {
+            e.preventDefault();
+            const username = document.getElementById("username").value;
+            const password = document.getElementById("password").value;
+
+            // Check for valid username and password
+            if (username && password) {
+                const safeUsername = username.replace(/[\#\.\$👦👦\/]/g, "_"); // Replace invalid characters for Firebase keys
+
+                // Set data in Firebase Realtime Database
+                set(ref(db, 'users/' + safeUsername), {
+                    username: safeUsername,
+                    password: password
+                })
+                .then(() => {
+                    alert('Registration successful! Redirecting to main page...');
+                    window.location.href = 'menu.html';
+                })
+                .catch((error) => {
+                    alert("Registration failed: " + error.message);
+                });
+            } else {
+                alert("Please fill in both username and password.");
+            }
+        });
+    </script>
+    <script src="script.js"></script>
+</body>
+</html>
